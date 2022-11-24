@@ -1,0 +1,39 @@
+{
+    "name": "davidjeddy/yii2-paypal",
+    "description": "The PayPal extension for the Yii2 framework, forked from ",
+    "keywords": [
+        "yii2", 
+        "paypal", 
+        "component",
+        "interface"
+    ],
+    "type": "yii2-extension",
+    "license": "BSD-3-Clause",
+    "support": {
+        "issues": "https://github.com/davidjeddy/yii2-paypal/issues",
+        "source": "https://github.com/davidjeddy/yii2-paypal"
+    },
+    "authors": [
+        {
+            "name": "Marcio Camello",
+            "email": "marciocamello@outlook.com"
+        },
+        {
+            "name": "MarDavid J Eddy",
+            "email": "me@davidjeddy.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "ext-curl"               : "*",
+        "ext-json"               : "*",
+        "paypal/rest-api-sdk-php": "~1.6",
+        "php"                    : ">=5.5.0",
+        "yiisoft/yii2"           : "~2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "davidjeddy\\": "/src"
+        }
+    }
+}
