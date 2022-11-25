@@ -12,6 +12,7 @@ use common\models\LoginForm;
  */
 class SiteController extends Controller
 {
+    public $viewPath = '@frontend/views/newview'; // Doesn't work
     /**
      * {@inheritdoc}
      */

@@ -44,11 +44,15 @@ return [
             'name' => 'advanced-backend',
         ],
         'view' => [
-            'theme' => [
+            //'class' => 'backend\components\NewsView',
+           /* 'theme' => [
+                'basePath' => '@app/hail812/yii2-adminlte3/src/views',    
+                'baseUrl' => '@app/hail812/yii2-adminlte3/src/views', 
                 'pathMap' => [
-                   '@app/views' => '@app/backend/views/views'
+                   '@backend/views' => '@app/hail812/yii2-adminlte3/src/views'
+                   //'@app/views' => '@vendor/hail812/yii2-adminlte3/src/views'
                 ],
-            ],
+            ],*/
        ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,

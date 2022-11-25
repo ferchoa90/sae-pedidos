@@ -9,8 +9,7 @@ use yii\web\AssetBundle;
  */
 class AppAsset extends AssetBundle
 {
-    public $basePath = '@webroot';
-    public $baseUrl = '@web';
+    public $sourcePath = '@vendor/almasaeed2010/adminlte/dist';
     public $css = [
         'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
         'css/AdminLTE.min.css',
@@ -36,5 +35,9 @@ class AppAsset extends AssetBundle
     public $depends = [
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapAsset',
+        'hail812\adminlte3\assets\BaseAsset',
+        'hail812\adminlte3\assets\PluginAsset'
     ];
+
+    
 }
