@@ -124,7 +124,8 @@ class SiteController extends Controller
     public function actionPedidos()
     {
         $this->layout = 'pedidos';
-        $menu =  Menurestaurante::find()->where(['estatus' =>  "ACTIVO"])->orderBy(["nombre" => SORT_ASC])->all();
+        $date=date('Y-m-d');
+        $menu =  Menurestaurante::find()->where(['estatus' =>  "ACTIVO","fechavisual"=>$date])->orderBy(["nombre" => SORT_ASC])->all();
         $producto= array();
         $cont=0;
 
@@ -468,7 +469,7 @@ class SiteController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             $data = $_POST["SignupForm"];
             //var_dump($data["email"]);
-            $cedula="09".rand(10000000, 99999999);
+            //$cedula="09".rand(10000000, 99999999);
             $model->username=$data["email"];
             $model->cedula=$cedula;
 
