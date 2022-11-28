@@ -59,6 +59,7 @@ AppAsset::register($this);
 
 
 <link  href="<?= URL::base() ?>/css/pedidos.css" rel="stylesheet" type="text/css">
+<link  href="<?= URL::base() ?>/css/queries-pedidos.css" rel="stylesheet" type="text/css">
 <?php $this->head() ?>
 </head>
 
