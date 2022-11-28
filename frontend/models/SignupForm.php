@@ -13,8 +13,13 @@ class SignupForm extends Model
     public $nombres;
     public $apellidos;
     public $cedula;
+    public $telefono;
+    public $pregunta;
+    public $respuesta;
+    public $genero;
     public $email;
     public $password;
+    public $confirmpassword;
 
 
     /**
@@ -49,6 +54,23 @@ class SignupForm extends Model
 
             ['password', 'required', 'message' => 'Este campo es obligatorio.'],
             ['password', 'string', 'min' => 6, 'message' => 'Debe ingresar mínimo 6 caracteres.'],
+
+            ['confirmpassword', 'required', 'message' => 'Este campo es obligatorio.'],
+
+            ['pregunta', 'string', 'min' => 1, 'max' => 255],
+            ['pregunta', 'required', 'message' => 'Este campo es obligatorio.'],
+
+            ['respuesta', 'string', 'min' => 2, 'max' => 255],
+            ['respuesta', 'required', 'message' => 'Este campo es obligatorio.'],
+
+            ['genero', 'string', 'min' => 1, 'max' => 255],
+            ['genero', 'required', 'message' => 'Este campo es obligatorio.'],
+
+
+            ['telefono', 'string', 'min' => 9, 'max' => 10],
+            ['telefono', 'required', 'message' => 'Este campo es obligatorio.'],
+            
+
         ];
     }
 
@@ -65,7 +87,7 @@ class SignupForm extends Model
     }
 
 
-    /** 
+    /**
      * Signs user up.
      *
      * @return User|null the saved model or null if saving fails
@@ -75,16 +97,21 @@ class SignupForm extends Model
         if (!$this->validate()) {
             return null;
         }
-        
+
         $user = new User();
-        $user->username = $this->username;
+        $user->username = $this->email;
         $user->nombres = $this->nombres;
         $user->apellidos = $this->apellidos;
         $user->cedula = $this->cedula;
         $user->email = $this->email;
         $user->setPassword($this->password);
         $user->generateAuthKey();
-        
-        return $user->save() ? $user : null;
+        //var_dump($user);
+        if ($user->save()) {
+            return $user;
+        }else{
+            return null;
+        }
+        //return $user->save() ? $user : null;
     }
 }
