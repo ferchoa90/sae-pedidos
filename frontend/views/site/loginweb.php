@@ -33,8 +33,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                                 <div class="row register-form" style="margin-top:7%; display: block; padding-left:3%;padding-right:3%; padding-bottom:5%;padding-top:0%;">
-                                    <div class="d-flex justify-content-center">
-                                        <div class="p-2 login-user col-7">
+                                    <div class="d-flex justify-content-center div-login">
+                                        <div class="p-2 login-user col-sm-9 col-md-7 col-9">
                                             <h3 class="text-center pb-4">Inicio de sesión</h3>
  
                                             <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>

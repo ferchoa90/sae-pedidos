@@ -1,0 +1,8 @@
+@media screen and (min-width : 200px) and (max-width : 800px) {
+    .register-right{
+      width: 95%;
+    }
+    .register-left img{
+        width: 30%;
+      }
+}
