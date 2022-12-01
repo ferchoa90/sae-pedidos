@@ -20,7 +20,9 @@ $assetDir = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/admi
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php $this->registerCsrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
+    <script src="<?= URL::base() ?>/js/alertify.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="<?= URL::base() ?>/css/alertify.css">
     <?php $this->head() ?>
 </head>
 <body class="hold-transition sidebar-mini">
@@ -47,6 +49,16 @@ $assetDir = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/admi
 </div>
 
 
+<div id="loading" style="display:none ;" class="container h-100 col-12 text-center">
+    <div class="row align-items-center h-100">
+        <div class="col-12 mx-auto">
+            <div class="spinner-border text-success" role="status">
+                <span class="sr-only">Loading...</span>
+
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
@@ -123,3 +135,5 @@ $assetDir = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/admi
         padding-bottom: 0px;
     }
         </style>
+
+<script src="<?= URL::base() ?>/js/plugins/bootstrap3-typeahead.min.js"></script>
