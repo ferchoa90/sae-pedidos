@@ -236,7 +236,7 @@ class SiteController extends Controller
             // Inventario::find()->where(['id' => $value["id"]])->one();
             $cliente=Clientes::find()->where(["cedula" => $cedula])->one();
             $pedidos->idcliente=$cliente->id;
-            $pedidos->nombres=$cliente->nombres.' '.$cliente->apellidos;
+            $pedidos->nombres=$cliente->razonsocial.' '.$cliente->apellidos;
             $pedidos->usuariocreacion=  Yii::$app->user->identity->id;
 
             $direccion =$cliente->direccion;
@@ -488,7 +488,7 @@ class SiteController extends Controller
                 if ($model->load(Yii::$app->request->post()) && $login->login()){
                     extract($_POST["SignupForm"]);
                     $cliente->cedula=$cedula;
-                    $cliente->nombres=$nombres;
+                    $cliente->razonsocial=$nombres;
                     $cliente->apellidos=$apellidos;
                     $cliente->direccion="N/D";
                     $cliente->telefono=$telefono;
@@ -694,7 +694,7 @@ class SiteController extends Controller
             {
                 $cliente= new Clientes();
                 $cliente->cedula=$data['cedula'];
-                $cliente->nombres=$data['nombres'];
+                $cliente->razonsocial=$data['nombres'];
                 $cliente->direccion=$data['direccion'];
                 $cliente->telefono=$data['telefono'];
                 $cliente->correo=$data['correo'];
@@ -730,7 +730,7 @@ class SiteController extends Controller
             $factura= new Factura();
             $factura->nfactura=$facturan;
             $factura->idcliente=$cliente[0]->id;
-            $factura->nombres=$cliente[0]->nombres.' '.$cliente[0]->apellidos;
+            $factura->nombres=$cliente[0]->razonsocial.' '.$cliente[0]->apellidos;
             $factura->ruc=$cliente[0]->cedula;
             $factura->usuariocreacion=  Yii::$app->user->identity->id;
             //$factura->usuariocreacion=  1;
