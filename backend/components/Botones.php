@@ -21,16 +21,17 @@ class Botones extends Component
     {
 
         $result;
+        $return="";
         foreach($objetos as $obj):
 
 
             switch ($obj['tipo']) {
                 case 'link':
-                    $return.=$this->getBoton($obj['nombre'],$obj['id'],$obj['titulo'],$obj['link'],$obj['onclick'],$obj['clase'],$obj['style'],$obj['col'],$obj['tipocolor'],$obj['icono'],$obj['tamanio'],$obj['adicional']);
+                    $return.=$this->getBoton($obj['subtipo'],$obj['nombre'],$obj['id'],$obj['titulo'],$obj['link'],$obj['onclick'],$obj['clase'],$obj['style'],$obj['col'],$obj['tipocolor'],$obj['icono'],$obj['tamanio'],$obj['target'],$obj['adicional']).'&nbsp;';
                     break;
 
                 case 'separador':
-                    //echo $this->getSeparador($obj['clase'],$obj['estilo'], $obj['color']);
+                    $return.=$this->getSeparador($obj['clase'],$obj['estilo'], $obj['color']);
                     break;
                 default:
 
@@ -40,12 +41,14 @@ class Botones extends Component
         return $return;
     }
 
-    public function getBotones($tipo, $nombre='', $id='', $titulo='', $link='', $onclick='', $clase='', $style='', $col='',$tipocolor='',$icono='',$tamanio='', $adicional )
+    public function getBotones($tipo='',$nombre='', $id='', $titulo='', $link='', $onclick='', $clase='', $style='', $col='',$tipocolor='',$icono='',$tamanio='', $adicional )
     {
         //$date = date("Y-m-d H:i:s");
+
+        $tipo='bloquediv';
         switch ($tipo) {
             case 'bloquediv':
-                return $this->getBoton($nombre, $id, $titulo, $link,$onclick ,$clase, $style, $col,$tipocolor,$icono,$tamanio='', $adicional);
+                return $this->getBoton($subtipo,$nombre, $id, $titulo, $link,$onclick ,$clase, $style, $col,$tipocolor,$icono,$tamanio='',$target='', $adicional);
                 break;
 
             default:
@@ -55,18 +58,21 @@ class Botones extends Component
         return $date;
     }
 
-    private function getBoton($nombre='', $id='', $titulo='', $link='', $onclick='', $clase='', $style='', $col='',$tipocolor='',$icono='',$tamanio='', $adicional)
+    private function getBoton($tipo, $nombre='', $id='', $titulo='', $link='', $onclick='', $clase='', $style='', $col='',$tipocolor='',$icono='',$tamanio='',$target='', $adicional)
     {
         $classdefault=' ';
-        $tipocolordefault='btn btn-primary';
+        $tipocolordefault='btn bg-gradient-primary';
         $tamaniodefault='btn-sm';
         $onclickdefault='';
         $linkdefault='';
 
         ($tamanio=='') ? $tamanio=$tamaniodefault : '' ;
         ($tamanio=='pequeño') ? $tamanio='btn-sm' : '' ;
+        ($tamanio=='superp') ? $tamanio='btn-xs' : '' ;
         ($tamanio=='grande') ? $tamanio='btn-large' : '' ;
         ($tamanio=='completo') ? $tamanio='btn-block' : '' ;
+
+        ($tipo=='submit') ? $tipoboton='submit' : $tipoboton='button' ;
 
 
 
@@ -76,33 +82,40 @@ class Botones extends Component
         ($onclick=='') ? $onclick=$onclickdefault : $link='' ;
 
         $icon = new Iconos;
-        //var_dump($icono);
         $icono= $icon->getIconos($icono,'','','','','','','');
 
 
         switch ($tipocolor) {
             case 'azul':
-                $tipocolor='btn btn-primary btnedit';
+                $tipocolor='btn bg-gradient-primary btnedit';
                 break;
 
             case 'verde':
-                $tipocolor='btn btn-success btnedit';
+                $tipocolor='btn bg-gradient-success btnedit';
                 break;
 
             case 'rojo':
-                $tipocolor='btn btn-danger btnedit';
+                $tipocolor='btn bg-gradient-danger btnedit';
                 break;
 
             case 'verdesuave':
-                $tipocolor='btn btn-info btnedit';
+                $tipocolor='btn bg-gradient-info btnedit';
                 break;
 
             case 'amarillo':
-                $tipocolor='btn btn-warning btnedit';
+                $tipocolor='btn bg-gradient-warning btnedit';
                 break;
 
             case 'plomo':
-                $tipocolor='btn btn-secondary btnedit';
+                $tipocolor='btn bg-gradient-secondary btnedit';
+                break;
+
+            case 'negro':
+                $tipocolor='btn bg-gradient-dark btnedit';
+                break;
+
+            case 'naranja':
+                $tipocolor='btn bg-gradient-warning btnedit';
                 break;
 
             default:
@@ -120,12 +133,20 @@ class Botones extends Component
                 break;
         }
 
+        switch ($target) {
+            case 'blank':
+                $target=' target="_blank" ';
+                break;
 
+            default:
+                # code...
+                break;
+        }
 
         $div='
-         <a  '.$link.'  class="'.$clase.'" onclick="'.$onclick.'">
-                    <button type="submit" id="'.$id.'" name="'.$nombre.'" alt="'.$titulo.'" title="'.$titulo.'" onclick="" class="'.$tipocolor.' '.$tamanio.'">
-                    '.$icono.'
+         <a  '.$link.'  class="'.$clase.'" onclick="'.$onclick.'"  '.$target.'>
+                    <button type="'.$tipoboton.'" id="'.$id.'" name="'.$nombre.'" alt="'.$titulo.'" title="'.$titulo.'" onclick="" class="'.$tipocolor.' '.$tamanio.'">
+                    '.$icono.$titulo.'
                     </button>
         </a>
         ';
