@@ -205,6 +205,9 @@ body {
 .nav-pills .nav-link:not(.active):hover {
     color: darkred;
 }
+.card-primary.card-outline {
+    border-top: 3px solid #dc3545;
+}
 
 
 a {
@@ -222,10 +225,18 @@ a:hover {
 
 .btn-primary {
     color: #fff;
-    background-color: #007bff;
-    border-color: #007bff;
+    background-color: darkred;
+    border-color: darkred;
     box-shadow: none;
 }
+
+.btn-primary:hover {
+
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+
 
 [class*=sidebar-dark-] .nav-treeview>.nav-item>.nav-link {
     color: white;
