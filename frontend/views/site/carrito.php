@@ -70,11 +70,15 @@ $this->params['breadcrumbs'][] = $this->title;
                             <div class="col text-right" id="envio">$ 0.00</div>
                         </div>
                         <div class="row" style="border-top: 1px solid rgba(0,0,0,.1); padding: 2vh 0;">
+                            <div class="col">UTENSILIOS</div>
+                            <div class="col text-right" id="recargo">$ 0.00</div>
+                        </div>
+                        <div class="row" style="border-top: 1px solid rgba(0,0,0,.1); padding: 2vh 0;">
                             <div class="col">TOTAL</div>
                             <div class="col text-right" id="totalprecio">$ 0.00</div>
                         </div>
 
-                        <button onclick="javascript:realizarOrden();" class="btn btnordenar">ORDENAR</button>
+                        <button   class="btn btnordenar" data-toggle="modal" data-target="#confirmacion">ORDENAR</button>
                     </div>
                 </div>
             </div>
@@ -84,32 +88,30 @@ $this->params['breadcrumbs'][] = $this->title;
 	<!-- Footer -->
 
     <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-  Confirmación
-</button>
+ 
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="confirmacion" tabindex="-1" role="dialog" aria-labelledby="confirmacionLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <h5 class="modal-title" id="confirmacionLabel" style="margin-top:0px; font-size:13px">Confirmación</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-        ...
+      <div class="modal-body" style="font-size:13px">
+        ¿Deseas realizar el pedido?
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+          <button  onclick="javascript:realizarOrden();" type="button" class="btn btn-primary">Si</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
       </div>
     </div>
   </div>
 </div>
 	<div class="container-fluid text-center footer">
-		Design by <a href="#">Acep Sistemas.</a></p>
+		Design by <a href="#">Acep Sistemas.</a> 2022, Todos los derechos reservados</p>
 	</div>
 
 <script>
@@ -150,7 +152,7 @@ function realizarOrden()
                   //imprimirFactura(data.id);
                 }
             } else {
-                 alert('No se ha podido guardar la factura');
+                 alert('No se ha podido enviar el pedido, intente nuevamente');
                 //$.notify(data.Mensaje);
             }
           }
@@ -160,7 +162,7 @@ function realizarOrden()
 
 function recargoDomicilio()
 {
-    var jArray= <?php echo json_encode($valpedido ); ?>;
+var jArray= <?php echo json_encode($valpedido ); ?>;
 //var valrecargo=[<?php echo '"'.implode('","', $valpedido).'"' ?>];
 var indiceSelect=$("#sucursal")[0].selectedIndex-1;
 //console.log(jArray[indiceSelect])
@@ -211,6 +213,7 @@ function inicializarCompras()
 
 
             var total=0;
+            var recargo=0;
 
             if (dataCard.length>0){
                 for (var i = 0, l = dataCard.length; i < l; i++) {
@@ -230,13 +233,15 @@ function inicializarCompras()
                 //$('#preciot-'+(i+1)).html((parseFloat(dataCard[i].valoru).toFixed(2)*parseInt(dataCard[i].cantidad)).toFixed(2));
                 //total=parseFloat(total)+parseFloat(dataCard[i].total);
                 html+=iniciodiv+col2+img+findiv+col10+divnombre+divdescripcion+findiv+col+sumar+cantidad+restar+findiv+col+colprecio+findiv+findiv+findiv+findiv+findiv;
-                total+=parseFloat(dataCard[i].total);
+                total+=parseFloat(dataCard[i].total+dataCard[i].recargo);
+                recargo+=parseFloat(dataCard[i].recargo);
                 totalProd=i;
         }
             //console.log(html);
         $("#contenidoCarrito").html(html);
+        $("#recargo").html('$ '+parseFloat(recargo).toFixed(2));
         $("#subtotalprecio").html('$ '+parseFloat(total).toFixed(2));
-        $("#totalprecio").html('$ '+parseFloat(parseFloat(total)+parseFloat(valRecargo)).toFixed(2));
+        $("#totalprecio").html('$ '+(parseFloat(parseFloat(total)+parseFloat(recargo)+parseFloat(valRecargo) )).toFixed(2));
             }else{
                 html="No hay productos en tu lista";
             }
@@ -251,6 +256,7 @@ function inicializarCompras()
         var cantidad= dataCard[index].cantidad;
         //console.log(precio);
         dataCard[index].cantidad=cantidad+1;
+
         dataCard[index].total=parseFloat(precio*(cantidad+1)).toFixed(2);
         localStorage.setItem('cardID', JSON.stringify(dataCard));
         armarItems();

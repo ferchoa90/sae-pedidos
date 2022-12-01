@@ -231,7 +231,8 @@ class SiteController extends Controller
             $cedula = Yii::$app->user->identity->cedula;
             $nombres = Yii::$app->user->identity->nombres.' '.Yii::$app->user->identity->apellidos;
             $sector=$data["sucursal"];
-            $valorsector=Pedidozona::find(["id" => $sector])->one();
+            $valorsector=Pedidozona::find()->where(["id" => $sector])->one();
+            //die(var_dump($valorsector));
             $pedidos->id=$pedidon;
             // Inventario::find()->where(['id' => $value["id"]])->one();
             $cliente=Clientes::find()->where(["cedula" => $cedula])->one();
@@ -244,17 +245,21 @@ class SiteController extends Controller
             $pedidos->direccion= $direccion;
             $pedidos->idcliente=  Yii::$app->user->identity->id;
             $pedidos->idzona=  $valorsector->id;
-            $pedidos->telefono=  $telefono;
             $pedidos->recargo=  $valorsector->total;
+            $pedidos->telefono=  $telefono;
+            
             $pedidos->estatuspedido='NUEVO';
             $pedidos->estatus='ACTIVO';
             $valortotal=0;
             $iva=0;
             $subtotal=0;
+            $recargo=0;
             foreach ($data["data"] as $key => $value) {
                 //$value["id"];
-                $valortotal=$valortotal+($value["valorunitario"]*$value["cantidad"]);
+                $valortotal=$valortotal+(($value["valorunitario"]+$value["recargo"])*$value["cantidad"]);
+                $recargo=$recargo+$value["recargo"];
             }
+            
             $valortotal= number_format($valortotal, 2);
             $subtotal= number_format($valortotal/1.12,2);
             $iva= number_format($valortotal-$subtotal,2);
@@ -281,27 +286,26 @@ class SiteController extends Controller
                     $PedidoDetalle->descripcion=$descripcion;
                     $PedidoDetalle->nombreprod=$value["nombre"];
                     $PedidoDetalle->cantidad=$value["cantidad"];
+                    $PedidoDetalle->recargo=$value["recargo"];
                     //$PedidoDetalle->tarticulo=$value["descripcion"];
                     //$PedidoDetalle->imagen=$value["imagen"];
                     $PedidoDetalle->subtotal=$value["valorunitario"];
-                    $PedidoDetalle->total=number_format($value["valorunitario"]*$value["cantidad"],2);
+                    $PedidoDetalle->total=number_format(($value["valorunitario"]+$value["recargo"])*$value["cantidad"],2);
                     $PedidoDetalle->iva=$ivaI;
                     $PedidoDetalle->descuento=0;
                     $PedidoDetalle->usuariocreacion=$usuario;
                     $PedidoDetalle->estatus='ACTIVO';
                     $PedidoDetalle->save();
-                        //die(var_dump($PedidoDetalle->errors));
-
-                        //$modelI->stock=$modelInventario->stock- $value["cantidad"];
-                        //$modelI->save();
-                    //var_dump($facturaDetalle->errors);
+                    
+                   // var_dump($PedidoDetalle->errors);
                 }
                     $return=array("success"=>true,"Mensaje"=>"OK","resp" => true, "id" => $pedidos->id);
             }else{
                 //die(var_dump($pedidos->errors));
-                $return=array("success"=>false,"Mensaje"=>"No se ha podido ingresar el banner.","resp" => false, "id" => "");
+               // die(var_dump($pedidos->errors));
+                $return=array("success"=>false,"Mensaje"=>"","resp" => false, "id" => "");
             }
-             //var_dump($factura->errors);
+            // var_dump($factura->errors);
             //var_dump($data["data"][0]);
             return json_encode($return);
         }
@@ -339,6 +343,7 @@ class SiteController extends Controller
             $pedidosuser["cabecera"]->subtotal=$valueped->subtotal;
             $pedidosuser["cabecera"]->iva=$valueped->iva;
             $pedidosuser["cabecera"]->total=$valueped->total;
+            $pedidosuser["cabecera"]->recargo=$valueped->recargo;
             $idpedido=$valueped->id;
             
             //if ($pedidosDetalle->combo!=0){  }
@@ -353,6 +358,7 @@ class SiteController extends Controller
                 $pedidosuser["detalle"][$valueped->id][$cont]["cantidad"]=$valuepedet->cantidad;
                 $pedidosuser["detalle"][$valueped->id][$cont]["subtotal"]=$valuepedet->subtotal;
                 $pedidosuser["detalle"][$valueped->id][$cont]["descuento"]=$valuepedet->descuento;
+                $pedidosuser["detalle"][$valueped->id][$cont]["recargo"]=$valuepedet->recargo;
                 $pedidosuser["detalle"][$valueped->id][$cont]["iva"]=$valuepedet->iva;
                 $cont++;
             }

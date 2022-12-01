@@ -59,10 +59,12 @@ $this->params['breadcrumbs'][] = $this->title;
 
                                                 <!--Table body-->
                                                 <tbody>
-                                                <?php $cont=0; ?>
+                                                <?php $cont=0; $subtotal=0; $total=0;$recargo=0; ?>
                                                 <?php foreach ($pedidosdetalle["detalle"][$value->id] as $key => $valuedet) { ?>
 
                                                     <?php if ($cont % 2 ==0){ $style="table-info"; }else{ $style=""; } ?>
+                                                    <?php $subtotal+=$valuedet["subtotal"]*$valuedet["cantidad"]; ?>
+                                                    <?php $recargo+=$valuedet["recargo"]?>
                                                     <tr class="<?=$style ?>">
                                                         <td scope="row"><?= $valuedet["cantidad"] ?></th>
                                                         <td><?= $valuedet["nombre"] ?></td>
@@ -72,7 +74,20 @@ $this->params['breadcrumbs'][] = $this->title;
 
                                                     <?php $cont++; ?>
                                                 <?php }?>
+                                                <?php $total=$subtotal + $recargo + $value->recargo; ?>
 
+                                                <tr class="" style="border-top: 1px solid darkred;">
+                                                    <td colspan="3" style=" text-align:right;"><b>SUBTOTAL</b></td>
+                                                    <td><b>$ <?= number_format($subtotal,2);  ?></b></td>
+                                                </tr>
+                                                <tr class="" >
+                                                    <td colspan="3"  style=" text-align:right;"><b>UTENSILIOS + ENVIO</b></td>
+                                                    <td><b>$ <?= number_format($recargo+$value->recargo,2);  ?></b></td>
+                                                </tr>
+                                                <tr class="" >
+                                                    <td colspan="3"  style=" text-align:right;"><b>TOTAL</b></td>
+                                                    <td><b>$ <?= number_format($total,2);  ?></b></td>
+                                                </tr>
 
                                                 </tbody>
                                                 <!--Table body-->

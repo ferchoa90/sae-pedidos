@@ -48,10 +48,10 @@ $this->title = 'SAE - Sistema Administrativo Contable';
                                         </button>
                                     </div>-->
                                     <div class="col-12" style="padding-left:0px;padding-right:0px;">
-                                        <button id="btnpedir-<?= $value->id; ?>" onclick="javascript:agregarPedido('<?= $value->id; ?>','<?= $value->nombre; ?>','<?= $menuNombre; ?>','<?= $value->producto10->id; ?>','<?= $value->producto20->id; ?>','<?= $value->producto30->id; ?>','<?= $value->producto40->id; ?>','<?= $value->valor; ?>','<?= $value->iva; ?>',1,true);" type="button" class="btn btn-small btn-primary btn-circle btn-icon-left product-buttons-cart">
+                                        <button id="btnpedir-<?= $value->id; ?>" onclick="javascript:agregarPedido('<?= $value->id; ?>','<?= $value->nombre; ?>','<?= $menuNombre; ?>','<?= $value->producto10->id; ?>','<?= $value->producto20->id; ?>','<?= $value->producto30->id; ?>','<?= $value->producto40->id; ?>','<?= $value->recargo; ?>','<?= $value->valor; ?>','<?= $value->iva; ?>',1,true);" type="button" class="btn btn-small btn-primary btn-circle btn-icon-left product-buttons-cart">
                                             <i class="fa fa-money"></i>&nbsp;&nbsp;Pedir
                                         </button>
-                                        <button id="btnagregar-<?= $value->id; ?>" onclick="javascript:agregarPedido('<?= $value->id; ?>','<?= $value->nombre; ?>','<?= $menuNombre; ?>','<?= $value->producto10->id; ?>','<?= $value->producto20->id; ?>','<?= $value->producto30->id; ?>','<?= $value->producto40->id; ?>','<?= $value->valor; ?>','<?= $value->iva; ?>',1,false);" type="button" class="btn btn-small btn-primary btn-circle btn-icon-left product-buttons-cart">
+                                        <button id="btnagregar-<?= $value->id; ?>" onclick="javascript:agregarPedido('<?= $value->id; ?>','<?= $value->nombre; ?>','<?= $menuNombre; ?>','<?= $value->producto10->id; ?>','<?= $value->producto20->id; ?>','<?= $value->producto30->id; ?>','<?= $value->producto40->id; ?>','<?= $value->recargo; ?>','<?= $value->valor; ?>','<?= $value->iva; ?>',1,false);" type="button" class="btn btn-small btn-primary btn-circle btn-icon-left product-buttons-cart">
                                             <i class="fa fa-shopping-cart"></i>&nbsp;&nbsp;Agregar
                                         </button>
                                     </div>
@@ -120,7 +120,7 @@ function inicializarCompras()
       }
   }
 
-  function agregarPedido(id,nombre,descripcion,ped1,ped2,ped3,ped4,valor,iva,cantidad,redirect){
+  function agregarPedido(id,nombre,descripcion,ped1,ped2,ped3,ped4,recargo,valor,iva,cantidad,redirect){
     var dataPedidos;
         dataPedidos = {
           id: id,
@@ -131,6 +131,7 @@ function inicializarCompras()
           idproducto3: ped3,
           idproducto4: ped4,
           cantidad: cantidad,
+          recargo: recargo,
           valorunitario: valor,
           total: valor,
           iva: false,
@@ -173,6 +174,7 @@ function inicializarCompras()
           idproducto2: data.idproducto2,
           idproducto3: data.idproducto3,
           idproducto4: data.idproducto4,
+          recargo: data.recargo,
           valorunitario: data.total,
           cantidad: 1,
           total: data.total,
@@ -192,6 +194,7 @@ function inicializarCompras()
           idproducto2: data.idproducto2,
           idproducto3: data.idproducto3,
           idproducto4: data.idproducto4,
+          recargo: data.recargo,
           cantidad: 1,
           total: data.total,
           iva: false,
