@@ -9,14 +9,15 @@ use yii\web\AssetBundle;
  */
 class AppAsset extends AssetBundle
 {
-    public $sourcePath = '@vendor/almasaeed2010/adminlte/dist';
+    public $basePath = '@webroot';
+    public $baseUrl = '@web';
     public $css = [
         'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
         'css/AdminLTE.min.css',
         'css/skins/_all-skins.min.css',
         'js/plugins/sweetalert/sweetalert.css',
         'js/plugins/datatables/dataTables.bootstrap.css',
-        'js/plugins/datatables/buttons/buttons.dataTables.min.css', 
+        'js/plugins/datatables/buttons/buttons.dataTables.min.css',
         'css/site.css',
     ];
     public $js = [
@@ -31,13 +32,10 @@ class AppAsset extends AssetBundle
         'js/plugins/datatables/buttons/buttons.flash.min.js',
         'js/plugins/datatables/buttons/buttons.html5.min.js',
         'js/scripts.js',
+        
     ];
     public $depends = [
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapAsset',
-        'hail812\adminlte3\assets\BaseAsset',
-        'hail812\adminlte3\assets\PluginAsset'
     ];
-
-    
 }

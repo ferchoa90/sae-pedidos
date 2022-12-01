@@ -146,6 +146,12 @@ body {
     content: "\f111";
 }
 
+.alertify-notifier
+{
+    color: white;
+    text-align: center;
+}
+
 .alertify-notifier.ajs-right .ajs-message.ajs-visible {
     left: auto !important;
 }

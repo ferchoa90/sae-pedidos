@@ -187,7 +187,8 @@ function deleteReg(id) {
             var url =  '$urlfinal2' + "eliminar?id=" + id_reg;
             //var url =  '/$urlfinal';
             $.post(url, {
-                '_csrf-frontend': '$token'
+                '_csrf-frontend': '$token',
+                '_csrf-backend': '$token'
             }).done(function (data) {
                 loading(0);
                 //$.notify('Registro eliminado', "success");
