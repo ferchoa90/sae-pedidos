@@ -471,7 +471,7 @@ class SiteController extends Controller
             //var_dump($data["email"]);
             //$cedula="09".rand(10000000, 99999999);
             $model->username=$data["email"];
-            $model->cedula=$cedula;
+            $model->cedula=$data["cedula"];
 
             if ($model->validate()){
                 //&& $model->login()
