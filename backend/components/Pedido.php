@@ -22,6 +22,9 @@ class Pedido extends Component
                 break;
 
             case 'ACEPTADO':
+                return "Orden aceptada";
+                break;
+            case 'PREPARANDO':
                 return "Estamos preparando su orden";
                 break;
             case 'EN CAMINO':
@@ -29,6 +32,9 @@ class Pedido extends Component
                 break;
             case 'ENTREGADO':
                 return "Su orden ha sido entregada, provecho!";
+                break;
+            case 'CANCELADO':
+                return "Lo sentimos, orden cancelada!";
                 break;
 
             default:

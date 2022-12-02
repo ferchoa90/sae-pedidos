@@ -9,8 +9,11 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
 use common\models\Productos;
+use common\models\Pedidos;
+use common\models\Pedidosdetalle;
 use yii\db\Query;
 use backend\components\Botones;
+use backend\components\Pedidos_general;
 use backend\models\User;
 
 
@@ -56,6 +59,55 @@ class RestauranteController extends Controller
         return $this->render('index');
     }
 
+    public function actionPedidos()
+    {
+      $date=date('Y-m-d');
+        $pedidos =  Pedidos::find()->where(['estatus' =>  "ACTIVO"])->andWhere(['between', 'fechacreacion', $date.' 00:00:00', $date.' 23:59:59' ])->orderBy(["fechacreacion" => SORT_DESC])->all();
+       // $pedidosuser= array();
+        $pedidosuser["cabecera"]=new \stdClass();
+        //$pedidosuser["detalle"]=new \stdClass();
+       
+        //$pedidosuser["cabecera"]->subtotal = NULL;
+        //$pedidosuser["cabecera"]= array();
+       
+        $cont=0;
+        $combo=false;
+       //die(var_dump($pedidos));
+
+        foreach ($pedidos as $key => $valueped) {
+
+            $pedidosDetalle= Pedidosdetalle::find()->where(['idpedido' => $valueped->id])->orderBy(["id" => SORT_ASC])->all();
+            $pedidosuser["cabecera"]->subtotal=$valueped->subtotal;
+            $pedidosuser["cabecera"]->iva=$valueped->iva;
+            $pedidosuser["cabecera"]->total=$valueped->total;
+            $pedidosuser["cabecera"]->recargo=$valueped->recargo;
+            $idpedido=$valueped->id;
+            
+            //if ($pedidosDetalle->combo!=0){  }
+            //$pedidosuser["detalle"][$valueped->id][]=new \stdClass();
+            //die($idpedido);
+            //$pedidosuser["detalle"][$valueped->id][$cont]= new \stdClass();
+            
+            foreach ($pedidosDetalle as $key => $valuepedet) {
+                // die(var_dump($valuepedet->nombreprod));
+                $pedidosuser["detalle"][$valueped->id][$cont]["nombre"]=$valuepedet->nombreprod;
+                $pedidosuser["detalle"][$valueped->id][$cont]["descripcion"]=$valuepedet->descripcion;
+                $pedidosuser["detalle"][$valueped->id][$cont]["cantidad"]=$valuepedet->cantidad;
+                $pedidosuser["detalle"][$valueped->id][$cont]["subtotal"]=$valuepedet->subtotal;
+                $pedidosuser["detalle"][$valueped->id][$cont]["descuento"]=$valuepedet->descuento;
+                $pedidosuser["detalle"][$valueped->id][$cont]["recargo"]=$valuepedet->recargo;
+                $pedidosuser["detalle"][$valueped->id][$cont]["iva"]=$valuepedet->iva;
+                $cont++;
+            }
+        }
+
+
+        return $this->render('pedidos', [
+            'pedidos' => $pedidos,
+            'pedidosdetalle' => $pedidosuser,
+        ]);
+    }
+
     public function actionAlmuerzos()
     {
         return $this->render('almuerzos');
@@ -63,6 +115,20 @@ class RestauranteController extends Controller
     public function actionMenudiario()
     {
         return $this->render('menudiario');
+    }
+
+    public function actionFormeditarestatuspedido()
+    {
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect(URL::base() . "/site/login");
+        }
+        extract($_POST);
+        //die(var_dump($_FILES));
+        $data= new Pedidos_general;
+        $data= $data->setEstado($_POST);
+        $response=$data;
+        return json_encode($response);
+
     }
 
     public function actionAlmuerzosreg()

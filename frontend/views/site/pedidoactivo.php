@@ -25,7 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 <div class="col">
                                     <h4 class="text-left"><b>Pedido Actual</b></h4>
                                 </div>
-                                <div class="col align-self-center text-right text-muted parpadea" id="items"><?php $clasepedido= new Pedido; echo $clasepedido->getEstatuspedido($pedidos[0]->estatuspedido) ?></div>
+                                
                             </div>
                         </div>
                         <div id="contenidoPedidos">
@@ -35,8 +35,8 @@ $this->params['breadcrumbs'][] = $this->title;
                                     <div class="card-header" id="pedido-<?= $value->id ?>">
                                     <h5 class="mb-0 col-12">
                                         <a class="btn btn-link col-12 row" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                            <div class="col-11 text-left" >Pedido # 000<?= $value->id ?></div>
-
+                                            <div class="col-4 text-left" >Pedido # 000<?= $value->id ?></div>
+                                            <div class="col align-self-center text-right text-muted parpadea" id="items"><span  style="color:white"><?php $clasepedido= new Pedido; echo $clasepedido->getEstatuspedido($value->estatuspedido) ?></span></div>
                                             <div class="col-1" ><i class="fa fa-chevron-down" style="color:white;font-size: 10px;" aria-hidden="true"></i></div>
                                         </a>
                                     </h5>
