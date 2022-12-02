@@ -76,7 +76,7 @@ body {
     display: block;
     opacity: 0.7;
     background-color: #fff;
-    z-index: 9999;
+    z-index: 999;
     text-align: center;
   }
 
@@ -167,6 +167,11 @@ body {
     background-color: white !important;
 }
 
+.table-info2
+{
+    background-color: rgba(182, 2, 2,.2) !important;
+}
+
 .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active
 {
     background-color: #0069d9;
@@ -242,6 +247,11 @@ a:hover {
     border-color: #dc3545;
 }
 
+.btn-primary.disabled, .btn-primary:disabled {
+    color: #fff;
+    background-color: #410000;
+    border-color: #410000;
+}
 
 
 [class*=sidebar-dark-] .nav-treeview>.nav-item>.nav-link {

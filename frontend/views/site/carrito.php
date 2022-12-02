@@ -234,11 +234,19 @@ function inicializarCompras()
                 //total=parseFloat(total)+parseFloat(dataCard[i].total);
                 html+=iniciodiv+col2+img+findiv+col10+divnombre+divdescripcion+findiv+col+sumar+cantidad+restar+findiv+col+colprecio+findiv+findiv+findiv+findiv+findiv;
                 total+=parseFloat(dataCard[i].total+dataCard[i].recargo);
-                recargo+=parseFloat(dataCard[i].recargo);
+                console.log($("#sucursal").val() );
+                if ($("#sucursal").val() !=13 && $("#sucursal").val() !=12 )
+                {
+                    console.log("paso")
+                    recargo+=parseFloat(dataCard[i].recargo);
+                }else{
+                    recargo=0;
+                }
                 totalProd=i;
         }
             //console.log(html);
         $("#contenidoCarrito").html(html);
+
         $("#recargo").html('$ '+parseFloat(recargo).toFixed(2));
         $("#subtotalprecio").html('$ '+parseFloat(total).toFixed(2));
         $("#totalprecio").html('$ '+(parseFloat(parseFloat(total)+parseFloat(recargo)+parseFloat(valRecargo) )).toFixed(2));

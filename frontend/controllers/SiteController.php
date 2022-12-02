@@ -256,8 +256,14 @@ class SiteController extends Controller
             $recargo=0;
             foreach ($data["data"] as $key => $value) {
                 //$value["id"];
-                $valortotal=$valortotal+(($value["valorunitario"]+$value["recargo"])*$value["cantidad"]);
-                $recargo=$recargo+$value["recargo"];
+                if ($data["sucursal"] != 13 && $data["sucursal"] !=12)
+                {
+                    $valortotal=$valortotal+(($value["valorunitario"]+$value["recargo"])*$value["cantidad"]);
+                    $recargo=$recargo+$value["recargo"];
+                }else{
+                    $valortotal=$valortotal+(($value["valorunitario"])*$value["cantidad"]);
+                    $recargo=0;
+                }
             }
             
             $valortotal= number_format($valortotal, 2);
@@ -286,7 +292,13 @@ class SiteController extends Controller
                     $PedidoDetalle->descripcion=$descripcion;
                     $PedidoDetalle->nombreprod=$value["nombre"];
                     $PedidoDetalle->cantidad=$value["cantidad"];
-                    $PedidoDetalle->recargo=$value["recargo"];
+                    if ($data["sucursal"] != 13 && $data["sucursal"] !=12)
+                    {
+                        $PedidoDetalle->recargo=$value["recargo"];
+                    }else{
+                        $PedidoDetalle->recargo=0;
+                    }
+                    
                     //$PedidoDetalle->tarticulo=$value["descripcion"];
                     //$PedidoDetalle->imagen=$value["imagen"];
                     $PedidoDetalle->subtotal=$value["valorunitario"];
@@ -325,7 +337,7 @@ class SiteController extends Controller
     public function actionPedidoactivo()
     {
         $this->layout = 'pedidos';
-        $pedidos =  Pedidos::find()->where(['estatus' =>  "ACTIVO",'idcliente'=> Yii::$app->user->identity->id, 'estatuspedido' =>  "NUEVO"])->orderBy(["fechacreacion" => SORT_ASC])->all();
+        $pedidos =  Pedidos::find()->where(['estatus' =>  "ACTIVO",'idcliente'=> Yii::$app->user->identity->id])->orderBy(["fechacreacion" => SORT_ASC])->all();
        // $pedidosuser= array();
         $pedidosuser["cabecera"]=new \stdClass();
         //$pedidosuser["detalle"]=new \stdClass();
