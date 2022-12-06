@@ -30,8 +30,14 @@ class Pedido extends Component
             case 'EN CAMINO':
                 return "Su orden está en camino";
                 break;
+            case 'LISTO':
+                return "Su orden está lista para servir";
+                break;
+            case 'SERVIDO':
+                return "Buen provecho!";
+                break;
             case 'ENTREGADO':
-                return "Su orden ha sido entregada, provecho!";
+                return "Su orden ha sido entregada, buen provecho!";
                 break;
             case 'CANCELADO':
                 return "Lo sentimos, orden cancelada!";
