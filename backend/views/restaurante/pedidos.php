@@ -51,10 +51,19 @@ $urlpost='formeditarestatuspedido';
                         break;
                     case 'PREPARANDO':
                         $estilo="secondary";
-                        $btnpedido="<button class=\"btn btn-secondary btn-sm\" onclick=\"javascript:estatusPedido(this,'".$value->id."','3');\">A ENTREGAR</button>";
+                        if ($value->idzona == 11 || $value->idzona == 12 || $value->idzona == 13 )
+                        {
+                            $btnpedido="<button class=\"btn btn-secondary btn-sm\" onclick=\"javascript:estatusPedido(this,'".$value->id."','5');\">LISTO</button>";
+                        }else{
+                            $btnpedido="<button class=\"btn btn-secondary btn-sm\" onclick=\"javascript:estatusPedido(this,'".$value->id."','3');\">A ENTREGAR</button>";
+                        }
                         $btncancelar="<button class=\"btn btn-info btn-sm\" onclick=\"javascript:estatusPedido(this,'".$value->id."','7');\">CANCELAR</button>";
                         break;
-                    
+                    case 'LISTO':
+                        $estilo="success";
+                        $btnpedido="<button class=\"btn btn-success btn-sm\" onclick=\"javascript:estatusPedido(this,'".$value->id."','6');\">SERVIDO</button>";
+                        $btncancelar="<button class=\"btn btn-info btn-sm\" onclick=\"javascript:estatusPedido(this,'".$value->id."','7');\">CANCELAR</button>";
+                        break;
                     case 'EN CAMINO':
                         $estilo="info";
                         $btnpedido="<button class=\"btn btn-success btn-sm\" onclick=\"javascript:estatusPedido(this,'".$value->id."','4');\">ENTREGADO</button>";
@@ -69,13 +78,36 @@ $urlpost='formeditarestatuspedido';
                         # code...
                         break;
                 }   
+
+                switch ($value->idzona) {
+                    case 11:
+                        $estiloentrega="success";
+                        $tipoentrega="RETIRO LOCAL";
+                        break;
+                    case 12:
+                        $estiloentrega="info";
+                        $tipoentrega="SERVIRSE LOCAL";
+                        # code...
+                        break;
+                    case 13:
+                        $estiloentrega="warning";
+                        $tipoentrega="RETIRO LOCAL - NO VIANDA";
+                        # code...
+                        break;
+                    
+                    default:
+                        $estiloentrega="danger";
+                        $tipoentrega="A DOMICILIO";
+                        # code...
+                        break;
+                }
                 
               ?>
               <div>
                 <i class="fa fa-cutlery bg-red"></i>
                 <div class="timeline-item">
                   <span class="time"><i class="fas fa-clock"></i> <?= substr($value->fechacreacion,11,8)?></span>
-                  <h3 class="timeline-header"><a href="#"># <?= $value->id ?> : <?= $value->idcliente0->nombres.' '. $value->idcliente0->apellidos ?></a> - <b>Dirección :</b> <?= $value->idcliente0->cliente->direccion ?> | <span class="badge badge-<?=$estilo ?>"> <?= $value->estatuspedido ?></span></h3>
+                  <h3 class="timeline-header"><a href="#"># <?= $value->id ?> : <?= $value->idcliente0->nombres.' '. $value->idcliente0->apellidos ?></a> - <b>Dirección :</b> <?= $value->idcliente0->cliente->direccion ?> | <span class="badge badge-<?=$estilo ?>"> <?= $value->estatuspedido ?></span> | <span class="badge badge-<?=$estiloentrega ?>"> <?= $tipoentrega ?></span> | <span class="badge badge-info"> <?= $value->formapago0->nombre ?></span></h3>
 
                   <div class="timeline-body">
                     
@@ -170,7 +202,7 @@ $urlpost='formeditarestatuspedido';
             $(objeto).attr('disabled','');
             return false;
         }
-        if (estado==1 || estado==2 || estado==3 || estado==4 || estado==5 || estado==7) //ACEPTA EL PEDIDO
+        if (estado==1 || estado==2 || estado==3 || estado==4 || estado==5 ||  estado==6 || estado==7) //ACEPTA EL PEDIDO
         {
             if (gestionarPedido(id,estado)===true){
                 $(objeto).removeAttr('disabled');

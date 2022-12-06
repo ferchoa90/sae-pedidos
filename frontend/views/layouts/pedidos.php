@@ -65,7 +65,7 @@ AppAsset::register($this);
 
 
         <div class="col-lg-12 col-sm-12 col-12   d-flex   justify-content-center mb-3 ">
-        <div class="col-lg-8 col-sm-8 col-8 main-section   bd-highlight ">
+        <div class="col-lg-8 col-sm-8 col-12 main-section   bd-highlight ">
             <ul class="nav justify-content-center nav-justified">
                 <li class="nav-item">
                     <a class="nav-link active" href="<?= URL::base() ?>/site/loginweb">Inicio</a>

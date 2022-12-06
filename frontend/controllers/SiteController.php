@@ -224,6 +224,7 @@ class SiteController extends Controller
         if (isset($_POST) and !empty($_POST)) {
             $data = $_POST;
             //echo $data["cliente"];
+            $formapago= ($data["formapago"])? $data["formapago"] : 1;
             $pedidoant=Pedidos::find()->orderBy(["fechacreacion" => SORT_DESC])->one();
             //var_dump($pedidoant);
             $pedidon=$pedidoant->id+1;
@@ -272,6 +273,7 @@ class SiteController extends Controller
             $pedidos->subtotal=$subtotal;
             $pedidos->iva=$iva;
             $pedidos->total=$valortotal;
+            $pedidos->formapago=$formapago;
             //$pedidos->save();
             //die(var_dump($pedidos->errors));
             if ($pedidos->save()){

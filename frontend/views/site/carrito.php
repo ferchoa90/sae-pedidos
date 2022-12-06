@@ -32,10 +32,20 @@ $this->params['breadcrumbs'][] = $this->title;
                         </div>
 
 
-                        <div id="contenidoCarrito">
-
+                        <div id="contenidoCarrito"></div>
+                        <div id="formadepago" class="row col-12   p-2">
+                            <span class="text-muted"><b>Forma de pago: </b></span>
+                            <div class="custom-control custom-radio col-3">
+                                <input type="radio" class="custom-control-input" id="efectivo" name="tipopago" value="1" checked>
+                                <label class="custom-control-label" for="customControlValidation2">Efectivo</label>
+                            </div>
+                            <?php if  (@Yii::$app->user->identity->cliente->credito){ ?>
+                            <div class="custom-control custom-radio  col-3 p-0">
+                                <input type="radio" class="custom-control-input" id="credito" name="tipopago" value="5">
+                                <label class="custom-control-label" for="customControlValidation3">Crédito</label>
+                            </div>
+                            <?php } ?>
                         </div>
-
 
                         <div class="back-to-shop"><a href="<?= URL::base() ?>/site/pedidos">&leftarrow;</a><span class="text-muted">Regresar a pedidos</span></div>
                     </div>
@@ -130,13 +140,13 @@ function realizarOrden()
       }
       var sucursal=$('#sucursal').val();
       var codigo=$('#code').val();
-      
+      var formapago=$('input[name=tipopago]:checked').val();
 
       
       $.ajax({
           url:"ingresarpedido",
           method:"POST",
-          data: { data: dataPedido, sucursal:sucursal,'_csrf-frontend':'<?=Yii::$app->request->getCsrfToken()?>', codigo:codigo },
+          data: { data: dataPedido, sucursal:sucursal,'_csrf-frontend':'<?=Yii::$app->request->getCsrfToken()?>', codigo:codigo, formapago: formapago },
           //dataType:\"json\",
           success:function(data)
           {
@@ -230,14 +240,14 @@ function inicializarCompras()
                 //dataCard[i].total = parseFloat(dataCard[i].total)+parseFloat(data.total);
                 //dataCard[i].total=dataCard[i].total.toFixed(2)
                 //console.log(data.total);
+                //console.log($("#sucursal").val() );
                 //$('#preciot-'+(i+1)).html((parseFloat(dataCard[i].valoru).toFixed(2)*parseInt(dataCard[i].cantidad)).toFixed(2));
                 //total=parseFloat(total)+parseFloat(dataCard[i].total);
                 html+=iniciodiv+col2+img+findiv+col10+divnombre+divdescripcion+findiv+col+sumar+cantidad+restar+findiv+col+colprecio+findiv+findiv+findiv+findiv+findiv;
                 total+=parseFloat(dataCard[i].total+dataCard[i].recargo);
-                console.log($("#sucursal").val() );
                 if ($("#sucursal").val() !=13 && $("#sucursal").val() !=12 )
                 {
-                    console.log("paso")
+                    //console.log("paso")
                     recargo+=parseFloat(dataCard[i].recargo);
                 }else{
                     recargo=0;
@@ -256,6 +266,8 @@ function inicializarCompras()
         }
         $("#items").html((totalProd+1)+' Items');
         $("#contenidoCarrito").html(html);
+        if (dataCard.length==0){ $("#formadepago").hide(); }
+
     }
 
     function sumarItem(index){
@@ -267,6 +279,7 @@ function inicializarCompras()
 
         dataCard[index].total=parseFloat(precio*(cantidad+1)).toFixed(2);
         localStorage.setItem('cardID', JSON.stringify(dataCard));
+       
         armarItems();
     }
 
@@ -286,9 +299,12 @@ function inicializarCompras()
 
     function eliminarItem(index)
     {
+
         dataCard.splice(index, 1);
         localStorage.setItem('cardID', JSON.stringify(dataCard));
-        armarItems  ();
+        console.log(dataCard.length);
+        if (dataCard.length==0){ $("#formadepago").hide(); }
+        armarItems ();
     }
 </script>
 
@@ -318,7 +334,14 @@ function inicializarCompras()
     background: -webkit-linear-gradient(left, darkred,rgba(0, 0, 0, .9));
 }
 
-
+.custom-control-input {
+    position: absolute;
+    left: 10px;
+    z-index: 100;
+    width: 1rem;
+    height: 1.25rem;
+    opacity: 0;
+}
 .title {
     margin-bottom: 5vh
 }

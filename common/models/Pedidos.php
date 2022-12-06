@@ -96,6 +96,11 @@ class Pedidos extends \yii\db\ActiveRecord
         return $this->hasOne(Pedidozona::className(), ['id' => 'idzona']);
     }
 
+    public function getFormapago0()
+    {
+        return $this->hasOne(Tipopago::className(), ['id' => 'formapago']);
+    }
+
     /**
      * Gets query for [[Pedidodetalles]].
      *

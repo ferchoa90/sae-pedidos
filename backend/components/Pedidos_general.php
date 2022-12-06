@@ -57,6 +57,14 @@ class Pedidos_general extends Component
                     $mensaje="Pedido Entregado";
                     $nuevoestado="ENTREGADO";
                     break;
+                case 5:
+                    $mensaje="Pedido listo";
+                    $nuevoestado="LISTO";
+                    break;
+                case 6:
+                    $mensaje="Pedido servido";
+                    $nuevoestado="SERVIDO";
+                    break;
                 
                 case 7:
                     $mensaje="Pedido Cancelado";

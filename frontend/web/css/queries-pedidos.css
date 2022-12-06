@@ -5,4 +5,9 @@
     .register-left img{
         width: 30%;
       }
+
+      .main-content
+      {
+        width: 100% !important;
+      }
 }
