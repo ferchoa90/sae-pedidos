@@ -667,7 +667,7 @@ class SiteController extends Controller
             foreach ($model as $key => $data) {
                 $arrayResp[$key]['id'] = $data->id;
                 $arrayResp[$key]['cedula'] = $data->cedula;
-                $arrayResp[$key]['nombres'] = $data->nombres;
+                $arrayResp[$key]['nombres'] = $data->razonsocial;
                 if ($data->apellidos){  $arrayResp[$key]['apellidos'] = $data->apellidos; }else{  $arrayResp[$key]['apellidos'] = ""; }
                 $arrayResp[$key]['direccion'] = $data->direccion;
                 $arrayResp[$key]['telefono'] = $data->telefono;
