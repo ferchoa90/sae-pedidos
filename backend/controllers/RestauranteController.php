@@ -15,8 +15,7 @@ use yii\db\Query;
 use backend\components\Botones;
 use backend\components\Pedidos_general;
 use backend\models\User;
-
-
+use common\models\Menurestaurante;
 
 /**
  * Default controller for the `admin` module
@@ -108,6 +107,8 @@ class RestauranteController extends Controller
         ]);
     }
 
+
+
     public function actionAlmuerzos()
     {
         return $this->render('almuerzos');
@@ -173,6 +174,73 @@ class RestauranteController extends Controller
             $count++;
         }
         
+        return json_encode($arrayResp);
+    }
+ 
+    public function actionMenudiarioreg()
+    {
+        //\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect(URL::base() . "/site/login");
+        }
+        $page = "productos";
+        
+        $fechas = Menurestaurante::find()->where(['isDeleted' => '0'])->groupBy(["fechavisual"])->all();
+        //$arrayResp[] = array();
+        $count = 1;
+        $botones= new Botones;
+
+         
+        $index=1;
+        foreach ($fechas as $key => $value) {
+            $model = Menurestaurante::find()->where(['isDeleted' => '0','fechavisual'=>$value->fechavisual])->orderBy(["fechacreacion" => SORT_DESC])->all(); 
+            $contenidoMenu= array();
+            //$arrayResp[$value->fechavisual]=array();
+            $producto1=0;$producto2=0;$producto3=0;$producto4=0;
+            $nproducto1="";$nproducto2="";$nproducto3="";$nproducto4="";
+            foreach ($model as $keyM => $valueM) {
+                $arrayResp[$key]["num"]= $index;
+                //array_push($arrayResp[$value->fechavisual],["nombre"=>$valueM->nombre,"id_producto1"=>$valueM->producto1,"nombre_producto1"=>$valueM->producto10->nombreproducto,"id_producto2"=>$valueM->producto2,"nombre_producto2"=>$valueM->producto20->nombreproducto,"id_producto3"=>$valueM->producto3,"nombre_producto3"=>$valueM->producto30->nombreproducto,"id_producto4"=>$valueM->producto4,"nombre_producto4"=>$valueM->producto40->nombreproducto]);
+                if ($valueM->producto1 && $valueM->producto2 && $valueM->producto3 && $valueM->producto4 ){ 
+                    $producto1=$valueM->producto1;$nproducto1=$valueM->producto10->nombreproducto; 
+                    $producto2=$valueM->producto1;$nproducto2=$valueM->producto20->nombreproducto; 
+                    $producto3=$valueM->producto1;$nproducto3=$valueM->producto30->nombreproducto; 
+                    $producto4=$valueM->producto1;$nproducto4=$valueM->producto40->nombreproducto; 
+                    $arrayResp[$key]["fecha"]= $value->fechavisual;
+                    $arrayResp[$key]["producto1"]= $producto1;
+                    $arrayResp[$key]["nproducto1"]= $nproducto1;
+                    $arrayResp[$key]["producto2"]= $producto2;
+                    $arrayResp[$key]["nproducto2"]= $nproducto2;
+                    $arrayResp[$key]["producto3"]= $producto3;
+                    $arrayResp[$key]["nproducto3"]= $nproducto3;
+                    $arrayResp[$key]["producto4"]= $producto4;
+                    $arrayResp[$key]["nproducto4"]= $nproducto4;
+                    
+                }else{
+                    if ($valueM->producto1 && $valueM->producto2 && $valueM->producto3 ){ 
+                        $producto1=$valueM->producto1;$nproducto1=$valueM->producto10->nombreproducto; 
+                        $producto2=$valueM->producto1;$nproducto2=$valueM->producto20->nombreproducto; 
+                        $producto3=$valueM->producto1;$nproducto3=$valueM->producto30->nombreproducto; 
+                        $producto4="";$nproducto4=""; 
+                        $arrayResp[$key]["fecha"]= $value->fechavisual;
+                        $arrayResp[$key]["producto1"]= $producto1;
+                        $arrayResp[$key]["nproducto1"]= $nproducto1;
+                        $arrayResp[$key]["producto2"]= $producto2;
+                        $arrayResp[$key]["nproducto2"]= $nproducto2;
+                        $arrayResp[$key]["producto3"]= $producto3;
+                        $arrayResp[$key]["nproducto3"]= $nproducto3;
+                        $arrayResp[$key]["producto4"]= $producto4;
+                        $arrayResp[$key]["nproducto4"]= $nproducto4;
+                        
+                    }
+                }
+            }
+            $index++;
+
+            
+            
+        }
+        //die(json_encode($arrayResp,JSON_UNESCAPED_UNICODE));
         return json_encode($arrayResp);
     }
  
