@@ -33,6 +33,7 @@ use common\models\Menurestaurante;
 use common\models\Pedidozona;
 use common\models\Pedidos;
 use common\models\Pedidosdetalle;
+use common\models\Recaudaciones;
 
 use PayPal\Api\Amount;
 use PayPal\Api\Details;
@@ -141,6 +142,25 @@ class SiteController extends Controller
         }
         return $this->render('eliminarfactura');
     }
+
+    function actionEliminarfacturaeliminar($id)
+    {
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect(URL::base() . "/site/login");
+        }
+        $model = Factura::findOne($id);
+        $model->isDeleted = 1;
+
+        if ($model->save())
+        {
+           return true;
+        }else{
+           return false;
+        }
+
+        //die(var_dump($model->errors));
+    }
+
 
     public function actionRecaudaciones()
     {
@@ -747,6 +767,8 @@ class SiteController extends Controller
             //var_dump($factant);
             $facturan=$factant->nfactura+1;
             $cliente = Clientes::find()->where(['cedula' => $data["cliente"]])->orderBy(["fechacreacion" => SORT_DESC])->all();
+            $idempresa = $cliente[0]->idempresa;
+            $nombreempresa = $cliente[0]->empresa->nombre;
             $factura= new Factura();
             $factura->nfactura=$facturan;
             $factura->idcliente=$cliente[0]->id;
@@ -798,6 +820,27 @@ class SiteController extends Controller
                         $modelI->stock=$modelInventario->stock- $value["cantidad"];
                         $modelI->save();
                     //var_dump($facturaDetalle->errors);
+                }
+                // Sección para créditos
+                if ($factura->tipopago==5){
+                    // Si es crédito se guardará en la tabla transaccional recaudaciones
+                    $recaudaciones= new Recaudaciones();
+                    $recaudaciones->idcomprobante= $factura->id;
+                    $recaudaciones->idtipocomprobante= 1;
+                    $recaudaciones->subtotal = $factura->subtotal;
+                    $recaudaciones->iva = $factura->iva;
+                    $recaudaciones->valor = $factura->total;
+                    $recaudaciones->nombrecliente = $factura->nombres;
+                    $recaudaciones->fechamovimiento = date('Y-m-d');
+                    $recaudaciones->usuariocreacion=  Yii::$app->user->identity->id;
+                    $recaudaciones->idcliente = $factura->idcliente;
+                    $recaudaciones->idempresa = $idempresa;
+                    $recaudaciones->nombreempresa=  $nombreempresa;
+                    $recaudaciones->naturaleza=  "-1";
+                    $recaudaciones->idtipopago=  $factura->tipopago;
+                    $recaudaciones->isDeleted=  0;
+                    $recaudaciones->estatus=  "ACTIVO";
+                    $recaudaciones->save();
                 }
                     $return=array("success"=>true,"Mensaje"=>"OK","resp" => true, "id" => $factura->id);
             }else{
@@ -892,7 +935,7 @@ class SiteController extends Controller
                 } elseif ($id == "estatus" && $text == 'INACTIVO') {
                     //$arrayResp[$key][$id] = '<small class="badge badge-default"><i class="fa fa-circle-thin"></i>&nbsp; ' . $text . '</small>';
                 } else {
-                    if (($id == "nombres") || ($id == "total") ) { $arrayResp[$key][$id] = $text; }
+                    if (($id == "nombres") || ($id == "total") || ($id == "ruc") ) { $arrayResp[$key][$id] = $text; }
                     if (($id == "fechacreacion") ) { $arrayResp[$key][$id] = $text; }
                 }
             }

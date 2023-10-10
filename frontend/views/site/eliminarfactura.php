@@ -32,6 +32,7 @@ $botones= new Botones;
 
 $columnas= array(
     array('columna'=>'# Fac', 'datareg' => 'num', 'clase'=>'', 'estilo'=>'', 'ancho'=>''),
+    array('columna'=>'Identificacion', 'datareg' => 'ruc', 'clase'=>'', 'estilo'=>'', 'ancho'=>''),
     array('columna'=>'Razón social', 'datareg' => 'nombres', 'clase'=>'', 'estilo'=>'', 'ancho'=>''),
     array('columna'=>'Valor', 'datareg' => 'total', 'clase'=>'', 'estilo'=>'', 'ancho'=>'')  ,
     array('columna'=>'Fecha Hora', 'datareg' => 'fechacreacion', 'clase'=>'', 'estilo'=>'', 'ancho'=>'')  ,
@@ -42,7 +43,7 @@ $columnas= array(
 
 <div class="container-fluid">
   <!-- Page Heading -->
-  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+  <div class="d-sm-flex align-items-center justify-content-between mb-1">
     <div class="row w-100 d-flex ">
       <div class=" mr-auto p-2  ">
         <h1 class="h4 mb-0 text-gray-800">Facturas</h1>
@@ -59,6 +60,8 @@ echo $grid->getGrid(
         )
 );
 
+//var_dump($grid);
+
 ?>
  <style>
         .table
@@ -73,6 +76,10 @@ echo $grid->getGrid(
         {
           display: inline-block;
         }
+        .btn .fas, .fa
+        {
+          color:white;
+        }
     </style>
-<script src="https://code.jquery.com/jquery-3.3.1.js" ></script>
+ 
    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" defer></script>

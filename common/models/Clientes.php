@@ -78,4 +78,9 @@ class Clientes extends \yii\db\ActiveRecord
     {
         return $this->hasOne(User::className(), ['id' => 'usuariocreacion']);
     }
+
+    public function getEmpresa()
+    {
+        return $this->hasOne(EmpresaCliente::className(), ['id' => 'idempresa']);
+    }
 }

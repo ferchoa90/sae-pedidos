@@ -142,11 +142,58 @@ p {
     }
     
     .bg-gradient-primary {
-        background-color: #004370 !important;
-        background-image: linear-gradient(180deg, #429EEA 10%, #004370 100%) !important;
+        background-color: darkred !important;
+        background-image: linear-gradient(180deg, darkred 50%, #C10000 100%) !important;
         background-size: cover !important;
+        z-index: 9999;
     }
-    
+
+    .text-darkred
+    {
+        color: darkred;
+    }
+
+    .navbar-light
+    {
+        background: linear-gradient(270deg, #C10000 50%, darkred 100%) !important; !important;
+        z-index: 9999;
+    }
+
+    .sidebar-dark .sidebar-heading {
+        color: rgba(255,255,255,.7);
+    }
+
+    .sidebar-dark .nav-item .nav-link {
+        color: rgba(255,255,255,.9);
+    }
+
+    .sidebar-dark .nav-item .nav-link i {
+        color: rgba(255,255,255,.6);
+    }
+
+    .nav-item .dropdown-toggle .badge-danger
+    {
+        color: darkred;
+        background-color: white;
+    }
+
+    #loading {
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        position: fixed;
+        display: block;
+        opacity: 1;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 999;
+        text-align: center;
+    }
+
+    .nav-item .dropdown-toggle i
+    {
+        color: rgba(255,255,255,.95);
+    }
     .btn-primary {
         color: #fff;
         background-color: #429EEA;
@@ -1116,11 +1163,16 @@ p {
     .table thead th {
         vertical-align: middle;
         text-align: center;
-        background: #2F83C6;
+        background: darkred;
         color: white;
         border: 1px solid #dee2e6;
         border-left: 1px solid #2F83C6;
         border-top: 1px solid #2F83C6;
+    }
+
+    .custom-control-input:checked~.custom-control-label::before {
+        background-color: darkred;
+        border-color: darkred;
     }
     
     .table thead td {
