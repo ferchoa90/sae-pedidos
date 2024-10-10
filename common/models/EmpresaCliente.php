@@ -15,6 +15,7 @@ use Yii;
  * @property int $usuariocreacion
  * @property string $estatus
  *
+ * @property Clientes[] $clientes
  * @property Productos[] $productos
  * @property User $usuariocreacion0
  */
@@ -59,6 +60,16 @@ class EmpresaCliente extends \yii\db\ActiveRecord
             'usuariocreacion' => 'Usuariocreacion',
             'estatus' => 'Estatus',
         ];
+    }
+
+    /**
+     * Gets query for [[Clientes]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getClientes()
+    {
+        return $this->hasMany(Clientes::className(), ['idempresa' => 'id']);
     }
 
     /**

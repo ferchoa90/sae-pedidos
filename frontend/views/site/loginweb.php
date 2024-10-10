@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
                             <img src="<?= URL::base() ?>/images/logopollomusculosotr.png" />
-                            <h5 class="company_title">Asadero Pollo Musculoso</h5>
+                            <h5 class="company_title">Restaurante Pollo Musculoso</h5>
                             <h5 class="" style="font-size:12px;" >Sistema de pedidos</h5>
 
                         

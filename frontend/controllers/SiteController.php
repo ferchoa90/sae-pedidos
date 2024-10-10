@@ -1,7 +1,9 @@
 <?php
 namespace frontend\controllers;
+use frontend\components\Configuraciones;
 use Yii;
 use yii\base\InvalidParamException;
+use yii\db\Exception;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\helpers\Url;
@@ -228,8 +230,13 @@ class SiteController extends Controller
             return $this->redirect(URL::base() . "/site/login");
         }
         $clientes = new Clientes;
+        $clienteslista = Clientes::find()->where(["isDeleted"=>0,"estatus"=>"ACTIVO"])->orderBy("razonsocial",SORT_ASC)->all();
+        $configuracion = new Configuraciones();
+        $configuracion = $configuracion->getConfiguracion(0,"facturacion_busqueda_defecto");
         return $this->render('facturar', [
             'clientes' => $clientes,
+            'clienteslista' => $clienteslista,
+            'busqueda_config' => $configuracion->data,
         ]);
     }
 
@@ -763,17 +770,24 @@ class SiteController extends Controller
         if (isset($_POST) and !empty($_POST)) {
             $data = $_POST;
             //echo $data["cliente"];
+            extract($_POST);
             $factant=Factura::find()->orderBy(["fechacreacion" => SORT_DESC])->one();
             //var_dump($factant);
             $facturan=$factant->nfactura+1;
-            $cliente = Clientes::find()->where(['cedula' => $data["cliente"]])->orderBy(["fechacreacion" => SORT_DESC])->all();
-            $idempresa = $cliente[0]->idempresa;
-            $nombreempresa = $cliente[0]->empresa->nombre;
+            if ($clienteSelect == true)
+            {
+                $cliente = Clientes::find()->where(['id' => $cliente])->orderBy(["fechacreacion" => SORT_DESC])->one();
+            }else{
+                $cliente = Clientes::find()->where(['cedula' => $cliente])->orderBy(["fechacreacion" => SORT_DESC])->one();
+            }
+            //die(var_dump($cliente->razonsocial));
+            $idempresa = $cliente->idempresa;
+            $nombreempresa = $cliente->empresa->nombre;
             $factura= new Factura();
             $factura->nfactura=$facturan;
-            $factura->idcliente=$cliente[0]->id;
-            $factura->nombres=$cliente[0]->razonsocial.' '.$cliente[0]->apellidos;
-            $factura->ruc=$cliente[0]->cedula;
+            $factura->idcliente=$cliente->id;
+            $factura->nombres=$cliente->razonsocial.' '.$cliente->apellidos;
+            $factura->ruc=$cliente->cedula;
             $factura->usuariocreacion=  Yii::$app->user->identity->id;
             //$factura->usuariocreacion=  1;
             $factura->tipopago= ($data["formapago"]=='efectivo')? 1 : 5;
@@ -793,59 +807,65 @@ class SiteController extends Controller
             $factura->subtotal=$subtotal;
             $factura->iva=$iva;
             $factura->total=$valortotal;
-            if ($factura->save()){
-                foreach ($data["data"] as $key => $value) {
-                    //$value["id"];
-                    $subtotalI= number_format($value["valoru"]/1.12,2);
-                    $ivaI= number_format($value["valoru"]-$subtotalI,2);
-                    $modelI =  Inventario::find()->where(['id' => $value["id"]])->one();
-                    $descripcion=$value["descripcion"];
-                    if ($value["color"]!="N/A"){ $descripcion.=' '.$value["color"]; }
-                    if ($value["clasificacion"]!="N/A"){ $descripcion.=' '.$value["clasificacion"]; }
-                    $facturaDetalle= new Facturadetalle();
-                    $facturaDetalle->idfactura=$factura->id;
-                    $facturaDetalle->cantidad=$value["cantidad"];
-                    $facturaDetalle->idarticulo=$modelI->id;
-                    $facturaDetalle->idinventario=$value["id"];
-                    $facturaDetalle->narticulo=$value["nombre"];
-                    $facturaDetalle->tarticulo=$descripcion;
-                    //$facturaDetalle->tarticulo=$value["descripcion"];
-                    $facturaDetalle->imagen=$value["imagen"];
-                    $facturaDetalle->valoru=$value["valoru"];
-                    $facturaDetalle->valort=number_format($value["valoru"]*$value["cantidad"],2);
-                    $facturaDetalle->iva=$ivaI;
-                    $facturaDetalle->civa=0;
-                    $facturaDetalle->estatus='ACTIVO';
-                    $facturaDetalle->save();
-                        $modelI->stock=$modelInventario->stock- $value["cantidad"];
+            try {
+                if ($factura->save()){
+                    foreach ($data["data"] as $key => $value) {
+                        //$value["id"];
+                        $subtotalI= number_format($value["valoru"]/1.12,2);
+                        $ivaI= number_format($value["valoru"]-$subtotalI,2);
+                        $modelI =  Inventario::find()->where(['id' => $value["id"]])->one();
+                        $descripcion=$value["descripcion"];
+                        if ($value["color"]!="N/A"){ $descripcion.=' '.$value["color"]; }
+                        if ($value["clasificacion"]!="N/A"){ $descripcion.=' '.$value["clasificacion"]; }
+                        $facturaDetalle= new Facturadetalle();
+                        $facturaDetalle->idfactura=$factura->id;
+                        $facturaDetalle->cantidad=$value["cantidad"];
+                        $facturaDetalle->idarticulo=$modelI->id;
+                        $facturaDetalle->idinventario=$value["id"];
+                        $facturaDetalle->narticulo=$value["nombre"];
+                        $facturaDetalle->tarticulo=$descripcion;
+                        //$facturaDetalle->tarticulo=$value["descripcion"];
+                        $facturaDetalle->imagen=$value["imagen"];
+                        $facturaDetalle->valoru=$value["valoru"];
+                        $facturaDetalle->valort=number_format($value["valoru"]*$value["cantidad"],2);
+                        $facturaDetalle->iva=$ivaI;
+                        $facturaDetalle->civa=0;
+                        $facturaDetalle->estatus='ACTIVO';
+                        $facturaDetalle->save();
+                        $modelI->stock=$modelInventario->stock-$value["cantidad"];
                         $modelI->save();
-                    //var_dump($facturaDetalle->errors);
-                }
-                // Sección para créditos
-                if ($factura->tipopago==5){
-                    // Si es crédito se guardará en la tabla transaccional recaudaciones
-                    $recaudaciones= new Recaudaciones();
-                    $recaudaciones->idcomprobante= $factura->id;
-                    $recaudaciones->idtipocomprobante= 1;
-                    $recaudaciones->subtotal = $factura->subtotal;
-                    $recaudaciones->iva = $factura->iva;
-                    $recaudaciones->valor = $factura->total;
-                    $recaudaciones->nombrecliente = $factura->nombres;
-                    $recaudaciones->fechamovimiento = date('Y-m-d');
-                    $recaudaciones->usuariocreacion=  Yii::$app->user->identity->id;
-                    $recaudaciones->idcliente = $factura->idcliente;
-                    $recaudaciones->idempresa = $idempresa;
-                    $recaudaciones->nombreempresa=  $nombreempresa;
-                    $recaudaciones->naturaleza=  "-1";
-                    $recaudaciones->idtipopago=  $factura->tipopago;
-                    $recaudaciones->isDeleted=  0;
-                    $recaudaciones->estatus=  "ACTIVO";
-                    $recaudaciones->save();
-                }
+                        //var_dump($facturaDetalle->errors);
+                    }
+                    // Sección para créditos
+                    if ($factura->tipopago==5){
+                        // Si es crédito se guardará en la tabla transaccional recaudaciones
+                        $recaudaciones= new Recaudaciones();
+                        $recaudaciones->idcomprobante= $factura->id;
+                        $recaudaciones->idtipocomprobante= 1;
+                        $recaudaciones->subtotal = $factura->subtotal;
+                        $recaudaciones->iva = $factura->iva;
+                        $recaudaciones->valor = $factura->total;
+                        $recaudaciones->nombrecliente = $factura->nombres;
+                        $recaudaciones->fechamovimiento = date('Y-m-d');
+                        $recaudaciones->usuariocreacion=  Yii::$app->user->identity->id;
+                        $recaudaciones->idcliente = $factura->idcliente;
+                        $recaudaciones->idempresa = $idempresa;
+                        $recaudaciones->nombreempresa=  $nombreempresa;
+                        $recaudaciones->naturaleza=  "-1";
+                        $recaudaciones->idtipopago=  $factura->tipopago;
+                        $recaudaciones->isDeleted=  0;
+                        $recaudaciones->estatus=  "ACTIVO";
+                        $recaudaciones->save();
+                    }
                     $return=array("success"=>true,"Mensaje"=>"OK","resp" => true, "id" => $factura->id);
-            }else{
-                $return=array("success"=>false,"Mensaje"=>"No se ha podido ingresar el banner.","resp" => false, "id" => "");
+                }else{
+                    $return=array("success"=>false,"Mensaje"=>"No se ha podido ingresar la factura.","Error"=>$factura->errors,"resp" => false, "id" => "");
+                }
+            }catch (\Exception $e)
+            {
+                $return=array("success"=>false,"Mensaje"=>"No se ha podido ingresar la factura.","Error"=>$e->getMessage(),"resp" => false, "id" => "");
             }
+
              //var_dump($factura->errors);
             //var_dump($data["data"][0]);
             return json_encode($return);

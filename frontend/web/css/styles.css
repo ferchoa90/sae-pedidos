@@ -1799,8 +1799,8 @@ p {
     }
     
     .alertify-notifier.ajs-right {
-        right: 0 !important;
-        width: 20% !important;
+        right: 270px !important;
+        width: 0% !important;
     }
     
     .alertify-notifier.ajs-right .ajs-message.ajs-visible {
